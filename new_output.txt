@@ -1,0 +1,8 @@
+HelloEnter username: Enter password: Confirm password: Enter full name: Enter email: Enter mobile number: 
+
+User credentials:
+Username: RaphaelBenedict
+Password: Password1!
+Full name: Raphael Benedict
+Email: raphael@example.com
+Mobile number: 09123456789
