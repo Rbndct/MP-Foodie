@@ -55,7 +55,7 @@ void getFoodType(FoodLog *food_log)
     do
     {
         printf("\nEnter food type: ");
-        printf("a- appetizer, m- main course, d- dessert\n");
+        printf("a - appetizer, m - main course, d - dessert\n");
         scanf("%c", &food_log->food_type);  // Note the space before %c to skip any whitespace
         while (getchar() != '\n');          // Clear the input buffer
     } while (!validateFoodType(&food_log->food_type));
