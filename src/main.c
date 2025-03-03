@@ -3,25 +3,19 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "input_validation.c"
+#include "food_log.c"
+#include "food_validation.c"
 #include "user.c"
+#include "user_input_validation.c"
 
 int main()
 {
     UserCredentials user;
-    getUsername(&user);
-    getPassword(&user);
-    getFullName(&user);
-    getEmail(&user);
-    getMobileNumber(&user);
+    FoodLog food_log;
 
-    // Testing
-    printf("\n\nUser credentials:\n");
-    printf("Username: %s\n", user.username);
-    printf("Password: %s\n", user.password);
-    printf("Full name: %s\n", user.full_name);
-    printf("Email: %s\n", user.email);
-    printf("Mobile number: %s\n", user.mobile_number);
+    // registerUser(&user);
+    // loginToUserAccount(&user);
+    // getDateFirstTried(&food_log);
 
     return 0;
 }
