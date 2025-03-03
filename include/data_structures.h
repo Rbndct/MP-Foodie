@@ -10,7 +10,6 @@
 
 // Maximum lengths for food log data
 #define MAX_FOOD_NAME 51
-#define MAX_FOOD_TYPE 2
 #define MAX_DATE_FIRST_TRIED 11
 #define MAX_LOCATION_FIRST_TRIED 31
 #define MAX_DESCRIPTION 301
@@ -28,7 +27,7 @@ typedef struct
 typedef struct
 {
     char food_name[MAX_FOOD_NAME];
-    char food_type[MAX_FOOD_TYPE];
+    char food_type;
     int times_eaten;
     char date_first_tried[MAX_DATE_FIRST_TRIED];
     char location_first_tried[MAX_LOCATION_FIRST_TRIED];
