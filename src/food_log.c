@@ -55,11 +55,11 @@ void getFoodType(FoodLog *food_log)
     do
     {
         printf("\nEnter food type: ");
-        scanf(" %c", &food_log->food_type);  // Note the space before %c to skip any whitespace
-        while (getchar() != '\n');           // Clear the input buffer
-    } while (!validateFoodType(food_log->food_type));
+        printf("a- appetizer, m- main course, d- dessert\n");
+        scanf("%c", &food_log->food_type);  // Note the space before %c to skip any whitespace
+        while (getchar() != '\n');          // Clear the input buffer
+    } while (!validateFoodType(&food_log->food_type));
 }
-
 
 void getTimesEaten(FoodLog *food_log)
 {
@@ -75,7 +75,7 @@ void getDateFirstTried(FoodLog *food_log)
 {
     do
     {
-        printf("\nEnter date first tried (YYYY-MM-DD): ");
+        printf("\nEnter date first tried (MM/DD/YYYY): ");
         scanf("%10s", food_log->date_first_tried);
         while (getchar() != '\n');
     } while (!validateDateFirstTried(food_log->date_first_tried));
