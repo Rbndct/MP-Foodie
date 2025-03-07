@@ -1,6 +1,6 @@
 #include "food_validation.h"
 
-#include <_ctype.h>
+#include <ctype.h>
 #include <stdio.h>
 #include <string.h>
 
