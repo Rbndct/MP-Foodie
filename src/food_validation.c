@@ -3,6 +3,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 int validateFoodName(const char *food_name)
 {
@@ -20,7 +21,7 @@ int validateFoodName(const char *food_name)
     // Check if food name contains only alphanumeric characters
     for (int i = 0; i < foodName_len; i++)
     {
-        if (!isalnum(food_name[i]))
+        if (!isalnum(food_name[i]) && food_name[i] != ' ')
         {
             printf("Food name should only contain alphanumeric characters.\n");
             isValid = 0;
@@ -61,18 +62,30 @@ int validateTimesEaten(const int *timesEaten)
 
 int validateDateFirstTried(const char *dateFirstTried)
 {
-    char months[][12] = {"January", "February", "March",     "April",   " May",     "June",
-                         "July",    "August",   "September", "October", "November", "December"};
-    int daysInMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    // Array of months in a year
+    const char *months[12] = {"January",   "February", "March",    "April",
+                              "May",       "June",     "July",     "August",
+                              "September", "October",  "November", "December"};
+    // Array of days in each month
+    int daysInMonth[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
     // Get date length
-    int date_len = strlen(dateFirstTried);
-    int isValid = 1;
+    int date_len;
+    date_len = strlen(dateFirstTried);
+
+    // Validation flag
+    int isValid;
+    isValid = 1;
+
+    // Get the current year
+    int currentYear;
+    currentYear = getCurrentYear();
 
     // Check if date is in the format MM/DD/YYYY
     if (date_len != 10 && (dateFirstTried[2] != '/' || dateFirstTried[5] != '/'))
     {
         isValid = 0;
-        printf("Date should be in the format YYYY-MM-DD.\n");
+        printf("Date should be in the format MM/DD/YYYY.\n");
     }
     else
     {
@@ -80,7 +93,7 @@ int validateDateFirstTried(const char *dateFirstTried)
         if (sscanf(dateFirstTried, "%2d/%2d/%4d", &month, &day, &year) != 3)
         {
             isValid = 0;
-            printf("Date should be in the format YYYY-MM-DD.\n");
+            printf("Date should be in the format MM-DD-YYYY.\n");
         }
         else
         {
@@ -104,10 +117,16 @@ int validateDateFirstTried(const char *dateFirstTried)
                 printf("Day should be between 1 and 31.\n");
             }
 
-            if (day < daysInMonth[month - 1])
+            if (day < 0 || day > daysInMonth[month - 1])
             {
                 isValid = 0;
                 printf("Invalid day for the month of %s.\n", months[month - 1]);
+            }
+
+            if (year < 1970 || year > currentYear)
+            {
+                isValid = 0;
+                printf("Year should be between 1970 and %d.\n", currentYear);
             }
         }
     }
@@ -128,6 +147,14 @@ int isLeapYear(int year)
     return leap;
 }
 
+int getCurrentYear()
+{
+    time_t now;
+    time(&now);                          // Get the current time
+    struct tm *local = localtime(&now);  // Get the local time
+    return local->tm_year + 1900;        // Extract the current year
+}
+
 int validateLocationFirstTried(const char *locationFirstTried)
 {
     // Get location length
@@ -144,7 +171,7 @@ int validateLocationFirstTried(const char *locationFirstTried)
     return isValid;
 }
 
-int validateDescription(const char *description)
+int validateFoodDescription(const char *description)
 {
     // Get description length
     int description_len = strlen(description);
