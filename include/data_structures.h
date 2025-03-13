@@ -2,6 +2,8 @@
 #define DATA_STRUCTURES_H
 
 // Maximum lengths for user data
+#define MAX_USERS 20  // Maximum users that can be stored
+
 #define MAX_USERNAME_LEN 51    // 50 characters + 1 for the null terminator
 #define MAX_PASSWORD_LEN 21    // 20 characters + 1 for the null terminator
 #define MAX_FULL_NAME_LEN 81   // 80 characters + 1 for the null terminator
@@ -9,20 +11,21 @@
 #define MAX_MOBILE_NUM_LEN 12  // 11 characters + 1 for the null terminator
 
 // Maximum lengths for food log data
-#define MAX_FOOD_NAME_LEN 51
-#define MAX_DATE_FIRST_TRIED_LEN 11
-#define MAX_LOCATION_FIRST_TRIED_LEN 31
-#define MAX_DESCRIPTION_LEN 301
+#define MAX_FOOD_LOG 50
+#define MAX_FOOD_NAME_LEN 51         // 50 characters + 1 for the null terminator
+#define MAX_DATE_FIRST_TRIED_LEN 11  // Format mm/dd/yyyy (10 chars +  1 for the null terminator)
+#define MAX_LOCATION_FIRST_TRIED_LEN 31  // Allows 30 characters + 1 for the null terminator
+#define MAX_DESCRIPTION_LEN 301          // Allows 300 characters + 1 for the null terminator
 
 // Maximum lengths for recipe data
-#define MAX_RECIPE 20
-#define MAX_RECIPE_INGREDIENTS 20
-#define MAX_RECIPE_INSTRUCTIONS 20
+#define MAX_RECIPE 20               // Maximum number of recipes records
+#define MAX_RECIPE_INGREDIENTS 20   // Maximum number of ingredients in a recipe
+#define MAX_RECIPE_INSTRUCTIONS 20  // Maximum number of instructions in a recipe
 
-#define MAX_RECIPE_NAM_LEN 51
-#define MAX_RECIPE_DESCRIPTION_LEN 161
-#define MAX_INGREDIENT_LEN 81
-#define MAX_INSTRUCTION_LEN 101
+#define MAX_RECIPE_NAM_LEN 51           // 50 chars + 1 for  null terminator
+#define MAX_RECIPE_DESCRIPTION_LEN 161  // 160 chars + 1 for null terminator
+#define MAX_INGREDIENT_LEN 81           // 80 chars + 1 for null terminator
+#define MAX_INSTRUCTION_LEN 101         // 100 chars + 1 for null terminator
 
 // Define the UserCredentials structure
 typedef struct
@@ -36,24 +39,24 @@ typedef struct
 
 typedef struct
 {
-    char food_name[MAX_FOOD_NAME_LEN];
-    char food_type;
-    int times_eaten;
-    char date_first_tried[MAX_DATE_FIRST_TRIED_LEN];
-    char location_first_tried[MAX_LOCATION_FIRST_TRIED_LEN];
-    char description[MAX_DESCRIPTION_LEN];
+    char food_name[MAX_FOOD_NAME_LEN];                        // Food name field
+    char food_type;                                           // Food type field
+    int times_eaten;                                          // Times eaten field
+    char date_first_tried[MAX_DATE_FIRST_TRIED_LEN];          // Date first tried field
+    char location_first_tried[MAX_LOCATION_FIRST_TRIED_LEN];  // Location first tried field
+    char description[MAX_DESCRIPTION_LEN];                    // Description field
 } FoodLog;
 
 typedef struct
 {
-    char recipe_name[MAX_FOOD_NAME_LEN];
-    char recipe_description[MAX_DESCRIPTION_LEN];
-    int time_to_prepare;
-    int time_to_cook;
-    int num_of_ingredients;
-    char ingredients[MAX_RECIPE_INGREDIENTS][MAX_INGREDIENT_LEN];
-    int num_of_instructions;
-    char instructions[MAX_RECIPE_INSTRUCTIONS][MAX_INSTRUCTION_LEN];
+    char recipe_name[MAX_RECIPE_NAM_LEN];                          // Recipe name field
+    char recipe_description[MAX_RECIPE_DESCRIPTION_LEN];           // Recipe description field
+    int time_to_prepare;                                           // Time to prepare field
+    int time_to_cook;                                              // Time to cook field
+    int num_of_ingredients;                                        // Number of ingredients field
+    char ingredients[MAX_RECIPE_INGREDIENTS][MAX_INGREDIENT_LEN];  // Ingredients field
+    int num_of_instructions;                                       // Number of instructions field
+    char instructions[MAX_RECIPE_INSTRUCTIONS][MAX_INSTRUCTION_LEN];  // Instructions field
 } Recipe;
 
 #endif  // DATA_STRUCTURES_H
