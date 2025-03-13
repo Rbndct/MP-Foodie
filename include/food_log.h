@@ -4,9 +4,9 @@
 #include "data_structures.h"
 
 // Function prototype to add a new food log entry
-void addFoodLog(FoodLog[], int *count);
+void addFoodLog(FoodLog[], int *);
 
-// Function prototyp4es to get specific food log details
+// Function prototypes to get specific food log details
 void getFoodName(FoodLog *);
 void getFoodType(FoodLog *);
 void getTimesEaten(FoodLog *);
@@ -15,6 +15,8 @@ void getLocationFirstTried(FoodLog *);
 void getFoodDescription(FoodLog *);
 
 void displayAllFoodLogs(FoodLog[], int);
+void wrapText(const char *, int);
+
 void modifyFoodLog(FoodLog[], int *);
 void displayFoodLogDetails(FoodLog *);
 void deleteFoodLog(FoodLog[], int *);
