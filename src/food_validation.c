@@ -5,44 +5,65 @@
 #include <string.h>
 #include <time.h>
 
-int validateFoodName(const char *food_name)
+int validateFoodName(char *food_name)
 {
-    // Get food name length
+    int isValid = 1;  // Assume valid unless proven otherwise
     int foodName_len = strlen(food_name);
-    int isValid = 1;
 
     // Check if food name is between 3 and 50 characters
     if (foodName_len < 3 || foodName_len > 50)
     {
-        isValid = 0;
         printf("Food name should be between 3 and 50 characters.\n");
+        isValid = 0;
     }
 
-    // Check if food name contains only alphanumeric characters
+    // Check if food name contains only alphanumeric characters and spaces
     for (int i = 0; i < foodName_len; i++)
     {
         if (!isalnum(food_name[i]) && food_name[i] != ' ')
         {
             printf("Food name should only contain alphanumeric characters.\n");
             isValid = 0;
+            break;  // No need to check further if already invalid
         }
     }
+
+    // Clear excess input from buffer if input was too long
+    int ch, overflow = 0;
+    while ((ch = getchar()) != '\n' && ch != EOF)
+    {
+        overflow = 1;
+    }
+
+    if (overflow)
+    {
+        printf("Input was too long! Only 50 characters allowed.\n");
+        food_name[0] = '\0';  // Reset invalid input
+        isValid = 0;
+    }
+
     return isValid;
 }
 
-int validateFoodType(const char *food_type)
+int validateFoodType(char food_type)
 {
-    // Food types: a- appetizer, m- main course, d- dessert,
+    const char foodTypes[] = {'a', 'm', 'd'};
+    int i = 0;
+    int isValid = 0;
 
-    char foodTypes[] = {'a', 'm', 'd'};
-    int isValid = 1;
-
-    // Check if food type is in foodTypes array
-    if (strchr(foodTypes, food_type[0]) == NULL)
+    while (i < 3 && !isValid)
     {
-        isValid = 0;
-        printf("Invalid food type.\n");
+        isValid = (food_type == foodTypes[i]);
+        i++;
     }
+
+    if (!isValid)
+    {
+        printf(
+            "Invalid food type. Please enter 'a' (Appetizer), 'm' (Main Course), or 'd' "
+            "(Dessert).\n");
+    }
+
     return isValid;
 }
 
@@ -155,33 +176,59 @@ int getCurrentYear()
     return local->tm_year + 1900;        // Extract the current year
 }
 
-int validateLocationFirstTried(const char *locationFirstTried)
+int validateLocationFirstTried(char *locationFirstTried)
 {
-    // Get location length
+    int isValid = 1;  // Assume valid unless proven otherwise
     int location_len = strlen(locationFirstTried);
-    int isValid = 1;
 
-    // Check if location is between 0 and 30 characters
-    if (location_len < 0 || location_len > 30)
+    // Check if location is between 1 and 30 characters
+    if (location_len < 1 || location_len > 30)
     {
-        isValid = 0;
         printf("Location should be between 1 and 30 characters.\n");
+        isValid = 0;
+    }
+
+    // Clear excess input from buffer if input was too long
+    int ch, overflow = 0;
+    while ((ch = getchar()) != '\n' && ch != EOF)
+    {
+        overflow = 1;
+    }
+
+    if (overflow)
+    {
+        printf("Input was too long! Only 30 characters allowed.\n");
+        locationFirstTried[0] = '\0';  // Reset invalid input
+        isValid = 0;
     }
 
     return isValid;
 }
 
-int validateFoodDescription(const char *description)
+int validateFoodDescription(char *description)
 {
-    // Get description length
-    int description_len = strlen(description);
-    int isValid = 1;
+    int isValid = 1;  // Assume valid unless proven otherwise
 
-    // Check if description is between 0 and 300 characters
-    if (description_len < 0 || description_len > 300)
+    // Check description length
+    int length = strlen(description);
+    if (length == 0 || length > 300)
     {
         isValid = 0;
         printf("Description should be between 1 and 300 characters.\n");
+    }
+
+    // Clear excess input from buffer if input was too long
+    int ch, overflow = 0;
+    while ((ch = getchar()) != '\n' && ch != EOF)
+    {
+        overflow = 1;  // Mark that input was too long
+    }
+
+    if (overflow)
+    {
+        isValid = 0;
+        printf("Input was too long! Only 300 characters allowed.\n");
+        description[0] = '\0';  // Reset invalid input
     }
 
     return isValid;
