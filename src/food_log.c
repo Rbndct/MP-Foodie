@@ -1,5 +1,6 @@
 #include "food_log.h"
 
+#include <ctype.h>
 #include <limits.h>
 #include <stdio.h>
 
@@ -23,28 +24,40 @@ void addFoodLog(FoodLog food_log[], int *count)
 {
     FoodLog newLog;
     int isDuplicate = 0;  // Variable to track duplicate status
+    int canAdd = 1;       // Flag to determine if the log can be added
 
     printf("\nAdd Food Log\n");
-    getFoodName(&newLog);
-    getFoodType(&newLog);
-    getTimesEaten(&newLog);
-    getDateFirstTried(&newLog);
-    getLocationFirstTried(&newLog);
-    getFoodDescription(&newLog);
 
-    // Check for duplicates using the function
-    isFoodLogDuplicate(food_log, *count, newLog.food_name, &isDuplicate);
-
-    if (isDuplicate)
+    // Check if food log is already full
+    if (*count >= MAX_FOOD_LOG)
     {
-        printf("\nError: Duplicate food name not allowed.\n");
+        printf("\nError: Food log is full. Cannot add more entries.\n");
+        canAdd = 0;  // Set flag to prevent adding new log
     }
-    else
+
+    if (canAdd)  // Proceed only if the log is not full
     {
-        // Store new entry
-        food_log[*count] = newLog;
-        (*count)++;  // Increment food count
-        printf("\nFood log added successfully!\n");
+        getFoodName(&newLog);
+        getFoodType(&newLog);
+        getTimesEaten(&newLog);
+        getDateFirstTried(&newLog);
+        getLocationFirstTried(&newLog);
+        getFoodDescription(&newLog);
+
+        // Check for duplicates using the function
+        isFoodLogDuplicate(food_log, *count, newLog.food_name, &isDuplicate);
+
+        if (isDuplicate)
+        {
+            printf("\nError: Duplicate food name not allowed.\n");
+        }
+        else
+        {
+            // Store new entry
+            food_log[*count] = newLog;
+            (*count)++;  // Increment food count
+            printf("\nFood log added successfully!\n");
+        }
     }
 }
 
@@ -53,20 +66,30 @@ void getFoodName(FoodLog *food_log)
     do
     {
         printf("\nEnter food name: ");
-        scanf("%50[^\n]", food_log->food_name);
-        while (getchar() != '\n');  // Clear the input buffer
+        scanf(" %50[^\n]", food_log->food_name);  // Read up to 50 characters
     } while (!validateFoodName(food_log->food_name));
 }
 
 void getFoodType(FoodLog *food_log)
 {
+    char temp;
+    int isValid = 0;
+
     do
     {
-        printf("\nEnter food type: ");
-        printf("a - appetizer, m - main course, d - dessert\n");
-        scanf("%c", &food_log->food_type);  // Note the space before %c to skip any whitespace
-        while (getchar() != '\n');          // Clear the input buffer
-    } while (!validateFoodType(&food_log->food_type));
+        printf("\nEnter food type (a - appetizer, m - main course, d - dessert): ");
+        scanf(" %c", &temp);  // Add a space before %c to consume leftover newlines
+
+        isValid = validateFoodType(temp);
+        if (!isValid)
+        {
+            printf(
+                "Invalid food type. Please enter 'a' (Appetizer), 'm' (Main Course), or 'd' "
+                "(Dessert).\n");
+        }
+    } while (!isValid);
+
+    food_log->food_type = temp;
 }
 
 void getTimesEaten(FoodLog *food_log)
@@ -110,8 +133,7 @@ void getLocationFirstTried(FoodLog *food_log)
     do
     {
         printf("\nEnter location first tried: ");
-        scanf("%30[^\n]", food_log->location_first_tried);
-        while (getchar() != '\n');
+        scanf(" %30[^\n]", food_log->location_first_tried);  // Read up to 30 characters
     } while (!validateLocationFirstTried(food_log->location_first_tried));
 }
 
@@ -120,33 +142,38 @@ void getFoodDescription(FoodLog *food_log)
     do
     {
         printf("\nEnter food description: ");
-        scanf("%300[^\n]", food_log->description);
-        while (getchar() != '\n');
+        scanf(" %300[^\n]", food_log->description);  // Read up to 300 characters
     } while (!validateFoodDescription(food_log->description));
 }
 
 void displayAllFoodLogs(FoodLog foodLogs[], int foodCount)
 {
-    printf("\n--------------------------------------------------\n");
+    printf("\n------------------------------------------------------------\n");
 
     if (foodCount == 0)
     {
-        printf("                 NO FOOD LOGS AVAILABLE\n");
-        printf("--------------------------------------------------\n");
+        printf("                     NO FOOD LOGS AVAILABLE                \n");
+        printf("------------------------------------------------------------\n");
     }
     else
     {
-        printf("                   FOOD LOGS                     \n");
-        printf("--------------------------------------------------\n");
+        printf("                        FOOD LOGS                          \n");
+        printf("------------------------------------------------------------\n");
 
         // Sort food logs in descending order (latest date first)
         for (int i = 0; i < foodCount - 1; i++)
         {
             for (int j = 0; j < foodCount - i - 1; j++)
             {
-                if (strcmp(foodLogs[j].date_first_tried, foodLogs[j + 1].date_first_tried) < 0)
+                int month1, day1, year1;
+                int month2, day2, year2;
+
+                sscanf(foodLogs[j].date_first_tried, "%d/%d/%d", &month1, &day1, &year1);
+                sscanf(foodLogs[j + 1].date_first_tried, "%d/%d/%d", &month2, &day2, &year2);
+
+                if (year1 < year2 || (year1 == year2 && month1 < month2) ||
+                    (year1 == year2 && month1 == month2 && day1 < day2))
                 {
-                    // Swap entries
                     FoodLog temp = foodLogs[j];
                     foodLogs[j] = foodLogs[j + 1];
                     foodLogs[j + 1] = temp;
@@ -157,10 +184,8 @@ void displayAllFoodLogs(FoodLog foodLogs[], int foodCount)
         // Display logs
         for (int i = 0; i < foodCount; i++)
         {
-            // Skip entries with empty food names
             if (strlen(foodLogs[i].food_name) > 0)
             {
-                // Determine full meaning of food type
                 const char *foodTypeFull;
                 switch (foodLogs[i].food_type)
                 {
@@ -175,28 +200,51 @@ void displayAllFoodLogs(FoodLog foodLogs[], int foodCount)
                         break;
                     default:
                         foodTypeFull = "Unknown";
-                        break;  // Fallback for unexpected values
+                        break;
                 }
 
-                printf("%-2d  %-50.50s\n", i + 1,
-                       foodLogs[i].food_name);           // Food name (max 50 chars)
-                printf("    Type: %s\n", foodTypeFull);  // Full meaning of food type
+                printf("%-2d  %-58.58s\n", i + 1, foodLogs[i].food_name);
+                printf("    Type: %s\n", foodTypeFull);
                 printf("    Times Eaten: %-3d\n", foodLogs[i].times_eaten);
                 printf("    Date First Tried: %-10.10s\n", foodLogs[i].date_first_tried);
                 printf("    Location: %-30.30s\n", foodLogs[i].location_first_tried);
-                printf("    Description: %-50.50s\n", foodLogs[i].description);
+                printf("    Description:\n ");
 
-                // Add word wrapping for descriptions longer than 50 chars
-                if (strlen(foodLogs[i].description) > 50)
-                {
-                    for (int j = 50; j < strlen(foodLogs[i].description); j += 50)
-                    {
-                        printf("                %-50.50s\n", &foodLogs[i].description[j]);
-                    }
-                }
-                printf("--------------------------------------------------\n");
+                wrapText(foodLogs[i].description, 8);  // Indented word wrap
+
+                printf("------------------------------------------------------------\n");
             }
         }
+    }
+}
+void wrapText(const char *text, int indent)
+{
+    int len = strlen(text);
+    int start = 0;
+
+    // Trim leading spaces
+    while (isspace(text[start])) start++;
+
+    while (start < len)
+    {
+        int end = start + 52;
+        if (end >= len)
+        {
+            printf("%*s%s\n", indent, "", &text[start]);  // No extra space added
+            break;
+        }
+
+        while (end > start && !isspace(text[end]))  // Avoid breaking words
+            end--;
+
+        if (end == start)  // No space found, force break
+            end = start + 52;
+
+        printf("%*s%.*s\n", indent, "", end - start, &text[start]);
+        start = end + 1;
+
+        // Skip extra spaces after line break
+        while (isspace(text[start])) start++;
     }
 }
 
