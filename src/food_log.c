@@ -251,9 +251,9 @@ void wrapText(const char *text, int indent)
 // Function to display the current food log details in the same format as `displayAllFoodLogs`
 void displayFoodLogDetails(FoodLog *log)
 {
-    printf("\n--------------------------------------------------\n");
-    printf("                   FOOD LOG DETAILS              \n");
-    printf("--------------------------------------------------\n");
+    printf("\n------------------------------------------------------------\n");
+    printf("                        FOOD LOG DETAILS                     \n");
+    printf("------------------------------------------------------------\n");
 
     // Determine full meaning of food type
     const char *foodTypeFull;
@@ -270,25 +270,19 @@ void displayFoodLogDetails(FoodLog *log)
             break;
         default:
             foodTypeFull = "Unknown";
-            break;  // Fallback for unexpected values
+            break;
     }
 
-    printf("    Food Name: %-50.50s\n", log->food_name);  // Food name (max 50 chars)
-    printf("    Type: %-20s\n", foodTypeFull);            // Full meaning of food type
+    printf("    Food Name: %-58.58s\n", log->food_name);
+    printf("    Type: %s\n", foodTypeFull);
     printf("    Times Eaten: %-3d\n", log->times_eaten);
     printf("    Date First Tried: %-10.10s\n", log->date_first_tried);
-    printf("    Location First Tried: %-30.30s\n", log->location_first_tried);
-    printf("    Description: %-50.50s\n", log->description);
+    printf("    Location: %-30.30s\n", log->location_first_tried);
+    printf("    Description:\n ");
 
-    // Add word wrapping for descriptions longer than 50 chars
-    if (strlen(log->description) > 50)
-    {
-        for (int i = 50; i < strlen(log->description); i += 50)
-        {
-            printf("                %-50.50s\n", &log->description[i]);
-        }
-    }
-    printf("--------------------------------------------------\n");
+    wrapText(log->description, 8);  // Indented word wrap
+
+    printf("------------------------------------------------------------\n");
 }
 
 void modifyFoodLog(FoodLog food_log[], int *count)
