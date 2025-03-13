@@ -32,9 +32,8 @@ int validateFoodName(const char *food_name)
 
 int validateFoodType(const char *food_type)
 {
-    /*
-    Food types: a- appetizer, m- main course, d- dessert,
-    */
+    // Food types: a- appetizer, m- main course, d- dessert,
+
     char foodTypes[] = {'a', 'm', 'd'};
     int isValid = 1;
 
@@ -52,11 +51,12 @@ int validateTimesEaten(const int *timesEaten)
     int isValid = 1;
 
     // Check if it is a positive integer
-    if (timesEaten < 0)
+    if (*timesEaten <= 0)
     {
         isValid = 0;
-        printf("Times eaten should be a positive integer.\n");
+        printf("Times eaten must be a positive integer.\n");
     }
+
     return isValid;
 }
 
@@ -165,7 +165,7 @@ int validateLocationFirstTried(const char *locationFirstTried)
     if (location_len < 0 || location_len > 30)
     {
         isValid = 0;
-        printf("Location should be between 3 and 30 characters.\n");
+        printf("Location should be between 1 and 30 characters.\n");
     }
 
     return isValid;
@@ -181,7 +181,7 @@ int validateFoodDescription(const char *description)
     if (description_len < 0 || description_len > 300)
     {
         isValid = 0;
-        printf("Description should be between 0 and 300 characters.\n");
+        printf("Description should be between 1 and 300 characters.\n");
     }
 
     return isValid;

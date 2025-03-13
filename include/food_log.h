@@ -3,10 +3,10 @@
 
 #include "data_structures.h"
 
-// Function to add a new food log entry
-void addFoodLog(FoodLog *);
+// Function prototype to add a new food log entry
+void addFoodLog(FoodLog[], int *count);
 
-// Functions to get specific food log details
+// Function prototyp4es to get specific food log details
 void getFoodName(FoodLog *);
 void getFoodType(FoodLog *);
 void getTimesEaten(FoodLog *);
@@ -14,4 +14,9 @@ void getDateFirstTried(FoodLog *);
 void getLocationFirstTried(FoodLog *);
 void getFoodDescription(FoodLog *);
 
+void displayAllFoodLogs(FoodLog[], int);
+void modifyFoodLog(FoodLog[], int *);
+void displayFoodLogDetails(FoodLog *);
+void deleteFoodLog(FoodLog[], int *);
+void searchFoodLog(FoodLog[], int);
 #endif  // FOOD_LOG_H

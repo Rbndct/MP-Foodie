@@ -3,11 +3,15 @@
 
 #include "data_structures.h"
 
-// Function declarations
+// Function prototypes for user account management
+void registerUser(UserCredentials *);
+void loginToUserAccount(UserCredentials *);
+
+// Function declarations for user input
 void getUsername(UserCredentials *);
 void getPassword(UserCredentials *);
 void getFullName(UserCredentials *);
-void getMobileNumber(UserCredentials *user);
+void getMobileNumber(UserCredentials *);
 void getEmail(UserCredentials *);
 
 #endif  // USER_H

@@ -78,7 +78,7 @@ void getMobileNumber(UserCredentials *user)
     } while (!validateMobileNumber(user->mobile_number));  // Call the validateMobileNumber function
 }
 
-void registerUser(UserCredentials *user)
+void registerUser(UserCredentials user[])
 {
     // Gets user input from username to mobile number
     printf("\nRegister an account\n");

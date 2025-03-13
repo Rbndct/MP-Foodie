@@ -1,10 +1,7 @@
 #ifndef USER_INPUT_VALIDATION_H
 #define USER_INPUT_VALIDATION_H
 
-#include <stdbool.h>
-
-#include "data_structures.h"
-
+// Function prototypes for validation
 int validateUsername(const char *);
 int validatePassword(const char *);
 int validateFullName(const char *);
