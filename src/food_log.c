@@ -20,7 +20,7 @@ void isFoodLogDuplicate(FoodLog food_log[], int count, const char *food_name, in
     }
 }
 
-void addFoodLog(FoodLog food_log[], int *count)
+void addFoodLog(FoodLog food_log[], int *count, UserCredentials UserCredentials)
 {
     FoodLog newLog;
     int isDuplicate = 0;  // Variable to track duplicate status
@@ -44,6 +44,9 @@ void addFoodLog(FoodLog food_log[], int *count)
         getLocationFirstTried(&newLog);
         getFoodDescription(&newLog);
 
+        strcpy(newLog.username, UserCredentials.username);    // Attach logged-in username
+        strcpy(newLog.full_name, UserCredentials.full_name);  // Attach full name of user
+
         // Check for duplicates using the function
         isFoodLogDuplicate(food_log, *count, newLog.food_name, &isDuplicate);
 
@@ -54,6 +57,7 @@ void addFoodLog(FoodLog food_log[], int *count)
         else
         {
             // Store new entry
+
             food_log[*count] = newLog;
             (*count)++;  // Increment food count
             printf("\nFood log added successfully!\n");
@@ -210,14 +214,15 @@ void displayAllFoodLogs(FoodLog foodLogs[], int foodCount)
                 printf("    Location: %-30.30s\n", foodLogs[i].location_first_tried);
                 printf("    Description:\n ");
 
-                wrapText(foodLogs[i].description, 8);  // Indented word wrap
+                wrapFoodText(foodLogs[i].description, 8);  // Indented word wrap
 
                 printf("------------------------------------------------------------\n");
             }
         }
     }
 }
-void wrapText(const char *text, int indent)
+
+void wrapFoodText(const char *text, int indent)
 {
     int len = strlen(text);
     int start = 0;
@@ -280,146 +285,169 @@ void displayFoodLogDetails(FoodLog *log)
     printf("    Location: %-30.30s\n", log->location_first_tried);
     printf("    Description:\n ");
 
-    wrapText(log->description, 8);  // Indented word wrap
+    wrapFoodText(log->description, 8);  // Indented word wrap
 
     printf("------------------------------------------------------------\n");
+}
+int findFoodLogIndex(FoodLog food_log[], int count, char search_name[])
+{
+    int index = -1;  // Default to -1 (not found)
+
+    for (int i = 0; i < count; i++)
+    {
+        if (strcmp(food_log[i].food_name, search_name) == 0)
+        {
+            index = i;  // Store the found index
+        }
+    }
+    return index;  // Always return once at the end
 }
 
 void modifyFoodLog(FoodLog food_log[], int *count)
 {
     char search_name[MAX_FOOD_NAME_LEN];
-    int isFound = 0;
-    int isDuplicate = 0;
+    int foundIndex = -1, isDuplicate = 0;
+    char confirm;
 
     printf("\nModify Food Log\n");
     printf("Enter the food name to search for: ");
-    scanf("%50s", search_name);
+    scanf(" %[^\n]", search_name);  // Allow spaces in input
 
-    // Search for the food log entry by food name
-    for (int i = 0; i < *count; i++)
+    foundIndex = findFoodLogIndex(food_log, *count, search_name);
+
+    if (foundIndex == -1)
     {
-        if (strcmp(food_log[i].food_name, search_name) == 0)
+        printf("\nError: Food log not found.\n");
+    }
+    else
+    {
+        // Display the current food log details
+        displayFoodLogDetails(&food_log[foundIndex]);
+
+        // Create a temporary structure to hold modifications
+        FoodLog temp_log = food_log[foundIndex];
+
+        printf("\nEnter new details:\n");
+        getFoodName(&temp_log);
+        getFoodType(&temp_log);
+        getTimesEaten(&temp_log);
+        getDateFirstTried(&temp_log);
+        getLocationFirstTried(&temp_log);
+        getFoodDescription(&temp_log);
+
+        // Check for duplicate food name
+        isFoodLogDuplicate(food_log, *count, temp_log.food_name, &isDuplicate);
+
+        if (isDuplicate)
         {
-            // Display the current food log details
-            displayFoodLogDetails(&food_log[i]);
+            printf("\nError: Duplicate food name not allowed. Modification aborted.\n");
+        }
+        else
+        {
+            // Display the proposed changes for confirmation
+            printf("\nProposed Changes:\n");
+            displayFoodLogDetails(&temp_log);
 
-            // Ask if the user wants to modify the found entry
-            printf("\nDo you want to modify this food log? (y/n): ");
+            // Prompt for confirmation in a loop until valid input ('y' or 'n') is entered
             char confirm;
-            scanf(
-                " %c",
-                &confirm);  // Space before %c to skip the newline character from the previous input
-
-            if (confirm == 'y' || confirm == 'Y')
+            int validInput = 0;
+            do
             {
-                // Modify food log details
-                getFoodName(&food_log[i]);
-                getFoodType(&food_log[i]);
-                getTimesEaten(&food_log[i]);
-                getDateFirstTried(&food_log[i]);
-                getLocationFirstTried(&food_log[i]);
-                getFoodDescription(&food_log[i]);
+                printf("\nDo you want to apply these changes? (y/n): ");
+                scanf(" %c", &confirm);
+                while (getchar() != '\n');  // Clear the input buffer
 
-                // Check if the new food name is a duplicate
-                isFoodLogDuplicate(food_log, *count, food_log[i].food_name, &isDuplicate);
-
-                if (isDuplicate)
+                if (confirm == 'y' || confirm == 'Y' || confirm == 'n' || confirm == 'N')
                 {
-                    printf("\nError: Duplicate food name not allowed. Modification aborted.\n");
+                    validInput = 1;
                 }
                 else
                 {
-                    // Proceed with the modification
-                    printf("\nFood log updated successfully!\n");
+                    printf("Invalid input! Please enter only 'y' or 'n'.\n");
                 }
+            } while (!validInput);
+
+            if (confirm == 'y' || confirm == 'Y')
+            {
+                // Replace the original food log with the modified one
+                food_log[foundIndex] = temp_log;
+                printf("\nFood log updated successfully!\n");
             }
             else
             {
                 printf("\nModification canceled. No changes were made.\n");
             }
-
-            isFound = 1;
-            // If the food log is found, isFound will be set to 1, and the loop will complete
         }
     }
-
-    // Check if no food log was found
-    if (!isFound)
-    {
-        printf("\nError: Food log not found.\n");
-    }
 }
-
 void deleteFoodLog(FoodLog food_log[], int *count)
 {
     char search_name[MAX_FOOD_NAME_LEN];
-    int isFound = 0;
+    int foundIndex = -1;
+    char confirm;
 
     printf("\nDelete Food Log\n");
     printf("Enter the food name to search for: ");
-    scanf("%50s", search_name);
+    scanf(" %[^\n]", search_name);  // Allow spaces in input
 
-    // Search for the food log entry by food name
-    for (int i = 0; i < *count; i++)
+    foundIndex = findFoodLogIndex(food_log, *count, search_name);
+
+    if (foundIndex == -1)
     {
-        if (strcmp(food_log[i].food_name, search_name) == 0)
+        printf("\nError: Food log not found.\n");
+    }
+    else
+    {
+        // Display the current food log details
+        displayFoodLogDetails(&food_log[foundIndex]);
+
+        // Ask for confirmation in a loop until valid input ('y' or 'n') is entered
+        char confirm;
+        int validInput = 0;
+        do
         {
-            // Display the current food log details to be deleted
-            displayFoodLogDetails(&food_log[i]);
-
-            // Ask if the user wants to delete the found entry
             printf("\nDo you want to delete this food log? (y/n): ");
-            char confirm;
-            scanf(
-                " %c",
-                &confirm);  // Space before %c to skip the newline character from the previous input
+            scanf(" %c", &confirm);
+            while (getchar() != '\n');  // Clear the input buffer
 
-            if (confirm == 'y' || confirm == 'Y')
+            if (confirm == 'y' || confirm == 'Y' || confirm == 'n' || confirm == 'N')
             {
-                // Proceed with deleting the food log
-                // Shift all subsequent food logs to remove the current entry
-                for (int j = i; j < *count - 1; j++)
-                {
-                    food_log[j] = food_log[j + 1];
-                }
-
-                (*count)--;  // Decrement the food log count
-                printf("\nFood log deleted successfully!\n");
+                validInput = 1;
             }
             else
             {
-                printf("\nDeletion canceled. No changes were made.\n");
+                printf("Invalid input! Please enter only 'y' or 'n'.\n");
+            }
+        } while (!validInput);
+
+        if (confirm == 'y' || confirm == 'Y')
+        {
+            // Shift all subsequent food logs to remove the entry
+            for (int i = foundIndex; i < *count - 1; i++)
+            {
+                food_log[i] = food_log[i + 1];
             }
 
-            isFound = 1;
-            // If the food log is found, isFound will be set to 1, and the loop will complete
+            (*count)--;  // Decrement the food log count
+            printf("\nFood log deleted successfully!\n");
         }
-    }
-
-    // Check if no food log was found
-    if (!isFound)
-    {
-        printf("\nError: Food log not found.\n");
+        else
+        {
+            printf("\nDeletion canceled. No changes were made.\n");
+        }
     }
 }
 
 void searchFoodLog(FoodLog food_log[], int count)
 {
     char search_name[MAX_FOOD_NAME_LEN];
-    int foundIndex = -1;  // Variable to store found index
+    int foundIndex = 1;
 
     printf("\nSearch Food Log\n");
     printf("Enter the food name to search for: ");
-    scanf("%50s", search_name);
+    scanf(" %[^\n]", search_name);  // Allow spaces in input
 
-    // Search for the food log entry by food name
-    for (int i = 0; i < count; i++)
-    {
-        if (strcmp(food_log[i].food_name, search_name) == 0)
-        {
-            foundIndex = i;
-        }
-    }
+    foundIndex = findFoodLogIndex(food_log, count, search_name);
 
     if (foundIndex != -1)
     {
@@ -431,7 +459,7 @@ void searchFoodLog(FoodLog food_log[], int count)
         printf("\nNo such food has been logged.\n");
     }
 
-    printf("\nPress any key to continue...");
-    getchar();  // Wait for user input before returning to the main menu
-    getchar();
+    printf("\nPress Enter to continue...");
+    while (getchar() != '\n');  // Clear input buffer
+    getchar();                  // Wait for user input before returning
 }
