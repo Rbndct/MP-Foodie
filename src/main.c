@@ -23,8 +23,16 @@ int main()
     FoodLog foodLogs[MAX_FOOD_LOG];  // Array to store food logs
     int foodCount = 0;               // Counter for food logs
 
+    Recipe recipeList[MAX_RECIPE];  // Array to store recipes
+    int recipeCount = 0;            // Counter for recipes
+
+    UserCredentials loggedInUser;
+
     int userChoice;
     int exitFlag = 0;  // Control variable for exiting
+
+    registerUser(&loggedInUser);
+    loginToUserAccount(&loggedInUser);
 
     do
     {
@@ -35,13 +43,13 @@ int main()
         switch (userChoice)
         {
             case 1:  // User Management
-                displayUserSubMenu();
+                displayUserSubMenu(foodLogs, foodCount, recipeList, recipeCount, &loggedInUser);
                 break;
             case 2:  // Food Log Management
-                displayFoodLogSubMenu(foodLogs, &foodCount);
+                displayFoodLogSubMenu(foodLogs, &foodCount, loggedInUser);
                 break;
             case 3:  // Recipe Management
-                displayRecipeSubMenu();
+                displayRecipeSubMenu(recipeList, &recipeCount, loggedInUser);
                 break;
             case 4:  // Export/Import Data
                 displayExportImportSubMenu();
