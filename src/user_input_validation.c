@@ -128,12 +128,17 @@ int validateFullName(const char *full_name)
     {
         if (!isalpha(full_name[i]) && full_name[i] != ' ')
         {
+            printf("Full name should only contain alphabetic characters and spaces.\n");
             isValid = 0;
         }
     }
 
     return isValid;
 }
+
+#include <ctype.h>
+#include <stdio.h>
+#include <string.h>
 
 int validateEmail(const char *email)
 {
@@ -148,32 +153,48 @@ int validateEmail(const char *email)
         printf("Email should be between 5 and 30 characters.\n");
     }
 
+    // Ensure email starts with an alphabet
     if (!isalpha(email[0]))
     {
         isValid = 0;
         printf("Email should start with an alphabet.\n");
     }
 
-    // Check if email contains '@' and '.'
-    int has_at = -1;
-    int has_dot = -1;
+    // Check for '@' and '.' with proper placement
+    int at_index = -1, dot_index = -1;
 
     for (int i = 0; i < email_len; i++)
     {
         if (email[i] == '@')
         {
-            has_at = i;
+            at_index = i;
         }
         else if (email[i] == '.')
         {
-            has_dot = i;
+            dot_index = i;
         }
     }
 
-    if (has_at == -1 || has_dot == -1 || has_at > has_dot)
+    // Conditions to check for valid email format
+    if (at_index == -1 || dot_index == -1)
     {
         isValid = 0;
         printf("Email should contain '@' and '.' in the correct order.\n");
+    }
+    else if (at_index > dot_index)  // '@' should come before '.'
+    {
+        isValid = 0;
+        printf("Email should have '@' before '.'.\n");
+    }
+    else if (dot_index - at_index < 2)  // At least one character between '@' and '.'
+    {
+        isValid = 0;
+        printf("Email should have at least one character between '@' and '.'.\n");
+    }
+    else if (dot_index == email_len - 1)  // '.' should not be at the end
+    {
+        isValid = 0;
+        printf("Email should not end with '.'.\n");
     }
 
     return isValid;
