@@ -18,7 +18,8 @@ void displayMainMenu()
     printf("%28s", "Enter your choice:");
 }
 
-void displayUserSubMenu()
+void displayUserSubMenu(FoodLog food_log[], int food_count, Recipe recipe_list[], int recipe_count,
+                        UserCredentials *logged_in_user)
 {
     int userChoice;
     int validInput;
@@ -28,8 +29,8 @@ void displayUserSubMenu()
         printf("\n|%38s|\n", "--------------------------------------");
         printf("|%9sUSER MANAGEMENT MENU%9s|\n", "", "");
         printf("|%38s|\n", "--------------------------------------");
-        printf("| %-3s -> %-29s |\n", "1.", "Display User");
-        printf("| %-3s -> %-29s |\n", "2.", "View All User Entries");
+        printf("| %-3s -> %-29s |\n", "1.", "Display User Details");
+        printf("| %-3s -> %-29s |\n", "2.", "Search for Data by Username");
         printf("| %-3s -> %-29s |\n", "0.", "Return to Main Menu");
         printf("|%38s|\n", "--------------------------------------");
         printf("%28s", "Enter your choice:");
@@ -46,10 +47,11 @@ void displayUserSubMenu()
             switch (userChoice)
             {
                 case 1:
-                    printf("\nDisplaying user details...\n");
+                    displayUser(logged_in_user);
                     break;
                 case 2:
-                    printf("\nViewing all user entries...\n");
+                    displayUserFoodLogsAndRecipes(food_log, food_count, recipe_list, recipe_count,
+                                                  logged_in_user);
                     break;
                 case 0:
                     printf("\nReturning to Main Menu...\n");
@@ -68,7 +70,8 @@ void displayUserSubMenu()
 
     } while (userChoice != 0);
 }
-void displayFoodLogSubMenu(FoodLog *foodLogs, int *foodCount)
+
+void displayFoodLogSubMenu(FoodLog food_log[], int *count, UserCredentials user_credentials)
 {
     int userChoice;
     int validInput;
@@ -98,29 +101,21 @@ void displayFoodLogSubMenu(FoodLog *foodLogs, int *foodCount)
         {
             switch (userChoice)
             {
-                void searchFoodLog(FoodLog[], int);
                 case 1:
-                    if (*foodCount < MAX_FOOD_LOG)  // Check if there's space for a new entry
-                    {
-                        addFoodLog(foodLogs, foodCount);
-                        (*foodCount)++;  // Increment food count
-                    }
-                    else
-                    {
-                        printf("\nFood log is full! Cannot add more entries.\n");
-                    }
+
+                    addFoodLog(food_log, count, user_credentials);
                     break;
                 case 2:
-                    modifyFoodLog(foodLogs, foodCount);
+                    modifyFoodLog(food_log, count);
                     break;
                 case 3:
-                    deleteFoodLog(foodLogs, foodCount);
+                    deleteFoodLog(food_log, count);
                     break;
                 case 4:
-                    displayAllFoodLogs(foodLogs, *foodCount);
+                    displayAllFoodLogs(food_log, *count);
                     break;
                 case 5:
-                    searchFoodLog(foodLogs, *foodCount);
+                    searchFoodLog(food_log, *count);
                     break;
                 case 0:
                     printf("\nReturning to Main Menu...\n");
@@ -140,7 +135,7 @@ void displayFoodLogSubMenu(FoodLog *foodLogs, int *foodCount)
     } while (userChoice != 0);
 }
 
-void displayRecipeSubMenu()
+void displayRecipeSubMenu(Recipe recipe_list[], int *count, UserCredentials user_credentials)
 {
     int userChoice;
     int validInput;
@@ -171,19 +166,19 @@ void displayRecipeSubMenu()
             switch (userChoice)
             {
                 case 1:
-                    printf("\nAdding a new recipe...\n");
+                    addRecipe(recipe_list, count, user_credentials);
                     break;
                 case 2:
-                    printf("\nModifying an existing recipe...\n");
+                    modifyRecipe(recipe_list, count);
                     break;
                 case 3:
-                    printf("\nDeleting a recipe...\n");
+                    deleteRecipe(recipe_list, count);
                     break;
                 case 4:
-                    printf("\nDisplaying all recipes...\n");
+                    displayAllRecipes(recipe_list, *count);
                     break;
                 case 5:
-                    printf("\nSearching for a recipe...\n");
+                    searchRecipe(recipe_list, *count);
                     break;
                 case 0:
                     printf("\nReturning to Main Menu...\n");
