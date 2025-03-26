@@ -5,13 +5,15 @@
 #include <string.h>
 #include <time.h>
 
+#include "data_structures.h"
+
 int validateFoodName(char *food_name)
 {
     int isValid = 1;  // Assume valid unless proven otherwise
     int foodName_len = strlen(food_name);
 
     // Check if food name is between 3 and 50 characters
-    if (foodName_len < 3 || foodName_len > 50)
+    if (foodName_len < 3 || foodName_len > MAX_FOOD_NAME_LEN - 1)
     {
         printf("Food name should be between 3 and 50 characters.\n");
         isValid = 0;
@@ -47,7 +49,7 @@ int validateFoodName(char *food_name)
 
 int validateFoodType(char food_type)
 {
-    const char foodTypes[] = {'a', 'm', 'd'};
+    const char foodTypes[] = { 'a', 'm', 'd' };
     int i = 0;
     int isValid = 0;
 
@@ -84,11 +86,12 @@ int validateTimesEaten(const int *timesEaten)
 int validateDateFirstTried(const char *dateFirstTried)
 {
     // Array of months in a year
-    const char *months[12] = {"January",   "February", "March",    "April",
-                              "May",       "June",     "July",     "August",
-                              "September", "October",  "November", "December"};
+    const char *months[12] = {
+        "January", "February", "March",     "April",   "May",      "June",
+        "July",    "August",   "September", "October", "November", "December"
+    };
     // Array of days in each month
-    int daysInMonth[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    int daysInMonth[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
     // Get date length
     int date_len;
@@ -182,7 +185,7 @@ int validateLocationFirstTried(char *locationFirstTried)
     int location_len = strlen(locationFirstTried);
 
     // Check if location is between 1 and 30 characters
-    if (location_len < 1 || location_len > 30)
+    if (location_len < 1 || location_len > MAX_LOCATION_FIRST_TRIED_LEN - 1)
     {
         printf("Location should be between 1 and 30 characters.\n");
         isValid = 0;
@@ -211,7 +214,7 @@ int validateFoodDescription(char *description)
 
     // Check description length
     int length = strlen(description);
-    if (length == 0 || length > 300)
+    if (length == 0 || length > MAX_DESCRIPTION_LEN)
     {
         isValid = 0;
         printf("Description should be between 1 and 300 characters.\n");
