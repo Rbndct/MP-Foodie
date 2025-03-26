@@ -2,7 +2,7 @@
 #define DATA_STRUCTURES_H
 
 // Maximum lengths for user data
-#define MAX_USERS 20  // Maximum users that can be stored
+#define MAX_USERS 5  // Maximum users that can be stored
 
 #define MAX_USERNAME_LEN 51    // 50 characters + 1 for the null terminator
 #define MAX_PASSWORD_LEN 21    // 20 characters + 1 for the null terminator
@@ -22,7 +22,7 @@
 #define MAX_RECIPE_INGREDIENTS 20   // Maximum number of ingredients in a recipe
 #define MAX_RECIPE_INSTRUCTIONS 20  // Maximum number of instructions in a recipe
 
-#define MAX_RECIPE_NAM_LEN 51           // 50 chars + 1 for  null terminator
+#define MAX_RECIPE_NAME_LEN 51          // 50 chars + 1 for  null terminator
 #define MAX_RECIPE_DESCRIPTION_LEN 161  // 160 chars + 1 for null terminator
 #define MAX_INGREDIENT_LEN 81           // 80 chars + 1 for null terminator
 #define MAX_INSTRUCTION_LEN 101         // 100 chars + 1 for null terminator
@@ -39,6 +39,8 @@ typedef struct
 
 typedef struct
 {
+    char username[MAX_USERNAME_LEN];                          // Username field
+    char full_name[MAX_FULL_NAME_LEN];                        // Full name field
     char food_name[MAX_FOOD_NAME_LEN];                        // Food name field
     char food_type;                                           // Food type field
     int times_eaten;                                          // Times eaten field
@@ -49,7 +51,9 @@ typedef struct
 
 typedef struct
 {
-    char recipe_name[MAX_RECIPE_NAM_LEN];                          // Recipe name field
+    char username[MAX_USERNAME_LEN];                               // Username field
+    char full_name[MAX_FULL_NAME_LEN];                             // Full name field
+    char recipe_name[MAX_RECIPE_NAME_LEN];                         // Recipe name field
     char recipe_description[MAX_RECIPE_DESCRIPTION_LEN];           // Recipe description field
     int time_to_prepare;                                           // Time to prepare field
     int time_to_cook;                                              // Time to cook field
