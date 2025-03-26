@@ -6,9 +6,11 @@ int validateFoodName(char *);
 int validateFoodType(char);
 int validateTimesEaten(const int *);
 int validateDateFirstTried(const char *);
-int isLeapYear(int);
-int getCurrentYear();
 int validateLocationFirstTried(char *);
 int validateFoodDescription(char *);
+
+// Function prototypes to get current year
+int isLeapYear(int);
+int getCurrentYear();
 
 #endif  // FOOD_VALIDATION_H
